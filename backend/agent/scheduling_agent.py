@@ -1,10 +1,9 @@
 from langchain_openai import ChatOpenAI
-from langchain.agents import AgentExecutor, create_openai_tools_agent
-from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain.memory import ConversationBufferMemory
-from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
 from typing import List, Dict, Any
 import os
+import json
 
 from backend.agent.prompts import SYSTEM_PROMPT
 from backend.tools.availability_tool import availability_tool
@@ -24,32 +23,14 @@ class SchedulingAgent:
             model=model_name,
             temperature=0.7,
             openai_api_key=api_key
-        )
+        ).bind_tools([availability_tool, booking_tool])
         
         self.faq_retrieval = FAQRetrieval()
         
-        self.tools = [availability_tool, booking_tool]
-        
-        self.prompt = ChatPromptTemplate.from_messages([
-            ("system", SYSTEM_PROMPT),
-            MessagesPlaceholder(variable_name="chat_history"),
-            ("human", "{input}"),
-            MessagesPlaceholder(variable_name="agent_scratchpad"),
-        ])
-        
-        self.agent = create_openai_tools_agent(
-            llm=self.llm,
-            tools=self.tools,
-            prompt=self.prompt
-        )
-        
-        self.agent_executor = AgentExecutor(
-            agent=self.agent,
-            tools=self.tools,
-            verbose=False,
-            handle_parsing_errors=True,
-            max_iterations=5
-        )
+        self.tools = {
+            "check_availability": availability_tool,
+            "book_appointment": booking_tool
+        }
     
     def _convert_history_to_messages(self, history: List[Dict[str, str]]) -> List[Any]:
         messages = []
@@ -90,12 +71,38 @@ class SchedulingAgent:
             
             chat_history = self._convert_history_to_messages(conversation_history)
             
-            result = await self.agent_executor.ainvoke({
-                "input": enhanced_message,
-                "chat_history": chat_history
-            })
+            messages = [
+                {"role": "system", "content": SYSTEM_PROMPT}
+            ] + chat_history + [
+                HumanMessage(content=enhanced_message)
+            ]
             
-            response = result.get("output", "I apologize, but I'm having trouble processing your request. Could you please rephrase that?")
+            response_message = await self.llm.ainvoke(messages)
+            
+            tools_used = 0
+            if hasattr(response_message, 'tool_calls') and response_message.tool_calls:
+                tools_used = len(response_message.tool_calls)
+                messages.append(response_message)
+                
+                for tool_call in response_message.tool_calls:
+                    tool_name = tool_call['name']
+                    tool_input = tool_call['args']
+                    
+                    if tool_name in self.tools:
+                        tool = self.tools[tool_name]
+                        tool_result = await tool.ainvoke(tool_input)
+                        
+                        messages.append(
+                            ToolMessage(
+                                content=tool_result,
+                                tool_call_id=tool_call['id']
+                            )
+                        )
+                
+                final_response = await self.llm.ainvoke(messages)
+                response = final_response.content
+            else:
+                response = response_message.content
             
             updated_history = conversation_history + [
                 {"role": "user", "content": user_message},
@@ -107,7 +114,7 @@ class SchedulingAgent:
                 "conversation_history": updated_history,
                 "metadata": {
                     "used_faq": bool(additional_context),
-                    "tools_used": len(result.get("intermediate_steps", []))
+                    "tools_used": tools_used
                 }
             }
         

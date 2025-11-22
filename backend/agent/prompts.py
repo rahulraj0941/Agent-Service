@@ -91,7 +91,3 @@ SYSTEM_PROMPT = """You are a helpful and empathetic medical appointment scheduli
 Remember: You're helping people with their health - be patient, thorough, and caring."""
 
 
-EXAMPLES = """
-**Example 1: Successful Booking Flow**
-
-User: I need to see the doctor

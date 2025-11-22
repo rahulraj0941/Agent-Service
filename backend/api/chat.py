@@ -4,13 +4,21 @@ from backend.agent.scheduling_agent import SchedulingAgent
 
 router = APIRouter(prefix="/api", tags=["chat"])
 
-agent = SchedulingAgent()
+agent = None
+
+
+def get_agent():
+    global agent
+    if agent is None:
+        agent = SchedulingAgent()
+    return agent
 
 
 @router.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
     try:
-        result = await agent.process_message(
+        current_agent = get_agent()
+        result = await current_agent.process_message(
             user_message=request.message,
             conversation_history=request.conversation_history or []
         )

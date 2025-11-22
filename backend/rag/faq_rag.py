@@ -8,11 +8,19 @@ from backend.rag.vector_store import VectorStore
 class FAQRetrieval:
     def __init__(self, clinic_info_path: str = "data/clinic_info.json"):
         self.clinic_info_path = Path(clinic_info_path)
-        self.embedding_service = EmbeddingService()
-        self.vector_store = VectorStore()
-        
-        if self.vector_store.count() == 0:
-            self._initialize_knowledge_base()
+        self.embedding_service = None
+        self.vector_store = None
+        self._initialized = False
+    
+    def _ensure_initialized(self):
+        if not self._initialized:
+            self.embedding_service = EmbeddingService()
+            self.vector_store = VectorStore()
+            
+            if self.vector_store.count() == 0:
+                self._initialize_knowledge_base()
+            
+            self._initialized = True
     
     def _initialize_knowledge_base(self) -> None:
         with open(self.clinic_info_path, 'r') as f:
@@ -104,19 +112,38 @@ class FAQRetrieval:
         self.vector_store.add_documents(documents, metadatas, embeddings)
     
     def retrieve_relevant_info(self, query: str, top_k: int = 3) -> List[str]:
+        self._ensure_initialized()
         query_embedding = self.embedding_service.embed_text(query)
         results = self.vector_store.query(query_embedding, n_results=top_k)
         
         return results["documents"]
     
     def get_context_for_query(self, query: str) -> str:
-        relevant_docs = self.retrieve_relevant_info(query, top_k=3)
-        
-        if not relevant_docs:
-            return "No relevant information found."
-        
-        context = "Here is relevant information from our clinic knowledge base:\n\n"
-        for i, doc in enumerate(relevant_docs, 1):
-            context += f"{i}. {doc}\n\n"
-        
-        return context.strip()
+        try:
+            self._ensure_initialized()
+            relevant_docs = self.retrieve_relevant_info(query, top_k=3)
+            
+            if not relevant_docs:
+                return "No relevant information found."
+            
+            context = "Here is relevant information from our clinic knowledge base:\n\n"
+            for i, doc in enumerate(relevant_docs, 1):
+                context += f"{i}. {doc}\n\n"
+            
+            return context.strip()
+        except Exception as e:
+            with open(self.clinic_info_path, 'r') as f:
+                clinic_data = json.load(f)
+            
+            query_lower = query.lower()
+            if "insurance" in query_lower:
+                insurance = clinic_data.get("insurance_and_billing", {})
+                return f"Accepted Insurance: {', '.join(insurance.get('accepted_insurance', []))}"
+            elif "hour" in query_lower or "open" in query_lower:
+                hours = clinic_data.get("clinic_details", {}).get("hours", {})
+                return f"Clinic Hours: {json.dumps(hours, indent=2)}"
+            elif "location" in query_lower or "address" in query_lower:
+                details = clinic_data.get("clinic_details", {})
+                return f"Location: {details.get('address', '')}. Phone: {details.get('phone', '')}"
+            
+            return "For detailed information, please call our office at +1-555-123-4567."

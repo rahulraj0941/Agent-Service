@@ -1,34 +1,40 @@
-from langchain.tools import Tool
+from langchain_core.tools import StructuredTool
 from typing import Dict, Any
 import httpx
 import json
+from pydantic import BaseModel, Field
 
 
-async def book_appointment(input_str: str) -> str:
+class BookingInput(BaseModel):
+    appointment_type: str = Field(description="One of 'consultation', 'followup', 'physical', 'specialist'")
+    date: str = Field(description="Appointment date in YYYY-MM-DD format")
+    start_time: str = Field(description="Start time in HH:MM format")
+    patient_name: str = Field(description="Patient's full name")
+    patient_email: str = Field(description="Patient's email address")
+    patient_phone: str = Field(description="Patient's phone number")
+    reason: str = Field(description="Reason for visit")
+
+
+async def book_appointment(
+    appointment_type: str,
+    date: str,
+    start_time: str,
+    patient_name: str,
+    patient_email: str,
+    patient_phone: str,
+    reason: str
+) -> str:
     try:
-        booking_data = json.loads(input_str)
-        
-        required_fields = ["appointment_type", "date", "start_time", "patient_name", 
-                          "patient_email", "patient_phone", "reason"]
-        missing_fields = [field for field in required_fields if field not in booking_data]
-        
-        if missing_fields:
-            return json.dumps({
-                "success": False,
-                "error": f"Missing required fields: {', '.join(missing_fields)}",
-                "required_fields": required_fields
-            })
-        
         payload = {
-            "appointment_type": booking_data["appointment_type"],
-            "date": booking_data["date"],
-            "start_time": booking_data["start_time"],
+            "appointment_type": appointment_type,
+            "date": date,
+            "start_time": start_time,
             "patient": {
-                "name": booking_data["patient_name"],
-                "email": booking_data["patient_email"],
-                "phone": booking_data["patient_phone"]
+                "name": patient_name,
+                "email": patient_email,
+                "phone": patient_phone
             },
-            "reason": booking_data["reason"]
+            "reason": reason
         }
         
         async with httpx.AsyncClient() as client:
@@ -56,11 +62,6 @@ async def book_appointment(input_str: str) -> str:
                     "status_code": response.status_code
                 })
     
-    except json.JSONDecodeError:
-        return json.dumps({
-            "success": False,
-            "error": "Invalid input format. Expected JSON with booking details."
-        })
     except Exception as e:
         return json.dumps({
             "success": False,
@@ -68,32 +69,9 @@ async def book_appointment(input_str: str) -> str:
         })
 
 
-booking_tool = Tool(
+booking_tool = StructuredTool.from_function(
+    coroutine=book_appointment,
     name="book_appointment",
-    description="""
-    Book a medical appointment with all required patient information.
-    
-    Input should be a JSON string with:
-    - appointment_type: One of 'consultation', 'followup', 'physical', 'specialist' (required)
-    - date: Appointment date in YYYY-MM-DD format (required)
-    - start_time: Start time in HH:MM format (required)
-    - patient_name: Patient's full name (required)
-    - patient_email: Patient's email address (required)
-    - patient_phone: Patient's phone number (required)
-    - reason: Reason for visit (required)
-    
-    Example: {
-        "appointment_type": "consultation",
-        "date": "2025-11-25",
-        "start_time": "14:00",
-        "patient_name": "John Doe",
-        "patient_email": "john@example.com",
-        "patient_phone": "+1-555-0100",
-        "reason": "Annual checkup"
-    }
-    
-    Only use this tool after confirming all details with the patient.
-    Returns booking confirmation with booking ID and confirmation code.
-    """,
-    coroutine=book_appointment
+    description="Book a medical appointment with all required patient information. Only use this tool after confirming all details with the patient. Returns booking confirmation with booking ID and confirmation code.",
+    args_schema=BookingInput
 )

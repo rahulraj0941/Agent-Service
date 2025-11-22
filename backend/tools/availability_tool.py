@@ -1,16 +1,18 @@
-from langchain.tools import Tool
+from langchain_core.tools import StructuredTool
 from typing import Dict, Any
 import httpx
 import json
 from datetime import datetime, timedelta
+from pydantic import BaseModel, Field
 
 
-async def check_availability(input_str: str) -> str:
+class AvailabilityInput(BaseModel):
+    date: str = Field(description="Date in YYYY-MM-DD format")
+    appointment_type: str = Field(default="consultation", description="One of 'consultation', 'followup', 'physical', 'specialist'")
+
+
+async def check_availability(date: str, appointment_type: str = "consultation") -> str:
     try:
-        params = json.loads(input_str)
-        date = params.get("date")
-        appointment_type = params.get("appointment_type", "consultation")
-        
         if not date:
             today = datetime.now()
             suggested_dates = [
@@ -60,29 +62,15 @@ async def check_availability(input_str: str) -> str:
                     "details": response.text
                 })
     
-    except json.JSONDecodeError:
-        return json.dumps({
-            "error": "Invalid input format. Expected JSON with 'date' and 'appointment_type' fields."
-        })
     except Exception as e:
         return json.dumps({
             "error": f"Error checking availability: {str(e)}"
         })
 
 
-availability_tool = Tool(
+availability_tool = StructuredTool.from_function(
+    coroutine=check_availability,
     name="check_availability",
-    description="""
-    Check doctor's availability for a specific date and appointment type.
-    
-    Input should be a JSON string with:
-    - date: Date in YYYY-MM-DD format (required)
-    - appointment_type: One of 'consultation', 'followup', 'physical', 'specialist' (default: 'consultation')
-    
-    Example: {"date": "2025-11-25", "appointment_type": "consultation"}
-    
-    Returns available time slots for the specified date and appointment type.
-    Use this tool when the user asks about availability or wants to see open time slots.
-    """,
-    coroutine=check_availability
+    description="Check doctor's availability for a specific date and appointment type. Returns available time slots for the specified date and appointment type. Use this tool when the user asks about availability or wants to see open time slots.",
+    args_schema=AvailabilityInput
 )
