@@ -22,7 +22,7 @@ class SchedulingAgent:
         self.llm = ChatOpenAI(
             model=model_name,
             temperature=0.7,
-            openai_api_key=api_key
+            api_key=api_key
         ).bind_tools([availability_tool, booking_tool])
         
         self.faq_retrieval = None
@@ -60,7 +60,7 @@ class SchedulingAgent:
         return any(keyword in message_lower for keyword in faq_keywords)
     
     async def process_message(self, user_message: str, 
-                             conversation_history: List[Dict[str, str]] = None) -> Dict[str, Any]:
+                             conversation_history: List[Dict[str, str]] | None = None) -> Dict[str, Any]:
         if conversation_history is None:
             conversation_history = []
         
