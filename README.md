@@ -1,6 +1,19 @@
-# Medical Appointment Scheduling Agent
+# Medical Appointment Scheduling Agent - Assessment Submission
 
 An intelligent conversational agent that helps patients schedule medical appointments through a natural language interface. The system integrates appointment booking capabilities with a RAG-based FAQ system to provide comprehensive patient support.
+
+## LLM Choice: Google Gemini
+
+**Provider:** Google Gemini API  
+**Model:** gemini-2.5-flash  
+**Embeddings:** Google embedding-001  
+
+**Rationale:** Google Gemini was chosen for this implementation due to:
+- **Free Tier Availability**: 10 requests/minute, 250K tokens/minute, sufficient for development and testing
+- **Strong Tool Calling Support**: Native function calling capabilities for availability checking and booking
+- **Quality Embeddings**: Built-in embedding-001 model for RAG implementation
+- **Fast Response Time**: Low latency for real-time conversational experience
+- **No Cost Barriers**: Unlike OpenAI's paid-only GPT-4, Gemini offers robust capabilities in free tier
 
 ## Features
 
