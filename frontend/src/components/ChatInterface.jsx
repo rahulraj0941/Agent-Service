@@ -11,8 +11,16 @@ const ChatInterface = () => {
   ])
   const [inputMessage, setInputMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [showQuickActions, setShowQuickActions] = useState(true)
   const messagesEndRef = useRef(null)
   const inputRef = useRef(null)
+
+  const quickActions = [
+    "Schedule an appointment",
+    "What insurance do you accept?",
+    "What are your hours?",
+    "I need to see a doctor today"
+  ]
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -22,6 +30,12 @@ const ChatInterface = () => {
     scrollToBottom()
   }, [messages])
 
+  const handleQuickAction = (action) => {
+    setInputMessage(action)
+    setShowQuickActions(false)
+    inputRef.current?.focus()
+  }
+
   const sendMessage = async (e) => {
     e.preventDefault()
     
@@ -29,6 +43,7 @@ const ChatInterface = () => {
 
     const userMessage = inputMessage.trim()
     setInputMessage('')
+    setShowQuickActions(false)
     
     setMessages(prev => [...prev, { role: 'user', content: userMessage }])
     setIsLoading(true)
@@ -68,6 +83,20 @@ const ChatInterface = () => {
 
   return (
     <div className="chat-container">
+      {showQuickActions && messages.length === 1 && (
+        <div className="quick-actions">
+          {quickActions.map((action, index) => (
+            <button
+              key={index}
+              className="quick-action-btn"
+              onClick={() => handleQuickAction(action)}
+            >
+              {action}
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="messages-container">
         {messages.map((message, index) => (
           <div
@@ -106,6 +135,7 @@ const ChatInterface = () => {
           placeholder="Type your message..."
           className="message-input"
           disabled={isLoading}
+          autoFocus
         />
         <button
           type="submit"
