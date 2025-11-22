@@ -2,14 +2,17 @@
 
 ## Overview
 
-An intelligent conversational agent that helps patients schedule medical appointments through natural language interaction. The system combines appointment booking capabilities with a RAG-based FAQ system to answer clinic-related questions. Built with FastAPI backend, React frontend, and powered by OpenAI's GPT-4 with LangChain for agent orchestration.
+An intelligent conversational agent that helps patients schedule medical appointments through natural language interaction. The system combines appointment booking capabilities with a RAG-based FAQ system to answer clinic-related questions. Built with FastAPI backend, React frontend, and powered by Google Gemini API with LangChain for agent orchestration.
 
 **Latest Updates (Nov 22, 2025):**
-- Fixed LangChain 1.0.8 compatibility issues with StructuredTool API
-- Implemented lazy initialization for RAG system to prevent startup crashes
-- Added graceful error handling for OpenAI API quota limitations
-- Both frontend and backend servers running successfully
-- All core features tested and working
+- **MIGRATED FROM OPENAI TO GOOGLE GEMINI** to leverage free tier and avoid quota limitations
+- Successfully configured Gemini 2.5 Flash model with proper response format handling
+- Updated embeddings to use Google's embedding-001 model for RAG system
+- Added environment validation utility (backend/utils/env_validator.py)
+- Fixed default model fallback to gemini-2.5-flash (was incorrectly set to deprecated 1.5)
+- Removed legacy OpenAI test artifacts
+- Both frontend and backend servers running successfully with Gemini
+- All core features tested and working end-to-end
 
 ## User Preferences
 
@@ -30,16 +33,17 @@ Preferred communication style: Simple, everyday language.
 - **Framework**: FastAPI with async/await support
 - **Port**: 8000
 - **Key Components**:
-  1. **Scheduling Agent** (LangChain 1.0.8 + OpenAI GPT-4o-mini):
+  1. **Scheduling Agent** (LangChain 1.0.8 + Google Gemini 2.5 Flash):
      - Multi-turn conversation management
      - Context-aware dialogue handling
      - Seamless switching between FAQ and scheduling modes
-     - Tool-calling capabilities using StructuredTool with Pydantic schemas
+     - Tool-calling capabilities using ChatGoogleGenerativeAI with tool binding
      - Lazy initialization for FAQ retrieval (prevents startup crashes)
+     - Response format normalization via _extract_text_content() helper
   
   2. **RAG System**:
      - Vector database: ChromaDB for persistent storage
-     - Embeddings: OpenAI text-embedding-3-small
+     - Embeddings: Google embedding-001 model
      - Knowledge base: Clinic information, insurance policies, visit preparation
      - FAQ retrieval with semantic search
      - Graceful degradation: Falls back to JSON data when embeddings unavailable
@@ -89,10 +93,11 @@ The agent handles:
 ## External Dependencies
 
 ### Third-Party APIs
-- **OpenAI API**: 
-  - GPT-4o-mini for conversational agent
-  - text-embedding-3-small for RAG embeddings
-  - Requires `OPENAI_API_KEY` environment variable
+- **Google Gemini API**: 
+  - gemini-2.5-flash model for conversational agent
+  - embedding-001 model for RAG embeddings
+  - Requires `GOOGLE_API_KEY` environment variable
+  - Free tier: 10 RPM, 250K TPM, 250 RPD
 
 ### Python Libraries
 - **FastAPI**: Web framework for REST API
@@ -111,9 +116,14 @@ The agent handles:
 
 ### Environment Configuration
 Required environment variables:
-- `OPENAI_API_KEY`: OpenAI API key for LLM and embeddings
-- `LLM_MODEL`: Optional, defaults to "gpt-4o-mini"
+- `GOOGLE_API_KEY`: Google Gemini API key for LLM and embeddings
+- `LLM_PROVIDER`: Set to "google" (default)
+- `LLM_MODEL`: Gemini model name, defaults to "gemini-2.5-flash"
+- `VECTOR_DB`: Set to "chromadb" (default)
+- `VECTOR_DB_PATH`: Path to vector database storage, defaults to "./data/vectordb"
 - `BACKEND_PORT`: Optional, defaults to 8000
+
+Environment validation utility available at `backend/utils/env_validator.py` to check required variables before startup.
 
 ### CORS Configuration
 Backend configured to accept requests from all origins for development purposes.
