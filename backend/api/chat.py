@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from backend.models.schemas import ChatRequest, ChatResponse
+from typing import List, Dict
+from backend.models.schemas import ChatRequest, ChatResponse, ChatMessage
 from backend.agent.scheduling_agent import SchedulingAgent
 
 router = APIRouter(prefix="/api", tags=["chat"])
@@ -18,14 +19,23 @@ def get_agent():
 async def chat(request: ChatRequest):
     try:
         current_agent = get_agent()
+        history: List[Dict[str, str]] = [
+            {"role": msg.role, "content": msg.content} 
+            for msg in (request.conversation_history or [])
+        ]
         result = await current_agent.process_message(
             user_message=request.message,
-            conversation_history=request.conversation_history or []
+            conversation_history=history
         )
+        
+        conversation_history = [
+            ChatMessage(role=msg["role"], content=msg["content"])
+            for msg in result["conversation_history"]
+        ]
         
         return ChatResponse(
             response=result["response"],
-            conversation_history=result["conversation_history"],
+            conversation_history=conversation_history,
             metadata=result.get("metadata")
         )
     

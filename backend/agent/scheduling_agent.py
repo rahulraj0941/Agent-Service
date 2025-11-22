@@ -95,7 +95,7 @@ class SchedulingAgent:
             
             chat_history = self._convert_history_to_messages(conversation_history)
             
-            messages = [
+            messages: List[Any] = [
                 {"role": "system", "content": SYSTEM_PROMPT}
             ] + chat_history + [
                 HumanMessage(content=enhanced_message)
