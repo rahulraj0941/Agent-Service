@@ -25,12 +25,17 @@ class SchedulingAgent:
             openai_api_key=api_key
         ).bind_tools([availability_tool, booking_tool])
         
-        self.faq_retrieval = FAQRetrieval()
+        self.faq_retrieval = None
         
         self.tools = {
             "check_availability": availability_tool,
             "book_appointment": booking_tool
         }
+    
+    def _get_faq_retrieval(self):
+        if self.faq_retrieval is None:
+            self.faq_retrieval = FAQRetrieval()
+        return self.faq_retrieval
     
     def _convert_history_to_messages(self, history: List[Dict[str, str]]) -> List[Any]:
         messages = []
@@ -62,8 +67,13 @@ class SchedulingAgent:
         try:
             additional_context = ""
             if self._check_if_faq_query(user_message):
-                faq_context = self.faq_retrieval.get_context_for_query(user_message)
-                additional_context = f"\n\nRelevant Clinic Information:\n{faq_context}\n"
+                try:
+                    faq_retrieval = self._get_faq_retrieval()
+                    faq_context = faq_retrieval.get_context_for_query(user_message)
+                    additional_context = f"\n\nRelevant Clinic Information:\n{faq_context}\n"
+                except Exception as e:
+                    print(f"FAQ retrieval failed: {e}. Using fallback response.")
+                    additional_context = "\n\nNote: For detailed clinic information, please call +1-555-123-4567.\n"
             
             enhanced_message = user_message
             if additional_context:
