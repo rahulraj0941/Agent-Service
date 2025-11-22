@@ -1,0 +1,92 @@
+{
+  "clinic_details": {
+    "name": "HealthCare Plus Clinic",
+    "address": "456 Medical Center Drive, Suite 200, New York, NY 10001",
+    "phone": "+1-555-123-4567",
+    "email": "info@healthcareplus.com",
+    "hours": {
+      "monday": "8:00 AM - 6:00 PM",
+      "tuesday": "8:00 AM - 6:00 PM",
+      "wednesday": "8:00 AM - 6:00 PM",
+      "thursday": "8:00 AM - 6:00 PM",
+      "friday": "8:00 AM - 5:00 PM",
+      "saturday": "9:00 AM - 1:00 PM",
+      "sunday": "Closed"
+    },
+    "directions": "We are located in the Medical Plaza building, right across from Central Hospital. Take the main entrance and use the elevators to the second floor. Our suite is directly to the left when you exit the elevator.",
+    "parking": "Free parking is available in the Medical Plaza garage. Enter from Oak Street and take a ticket at the gate. We will validate your parking when you check in. Additional street parking is available on Medical Center Drive."
+  },
+  "insurance_and_billing": {
+    "accepted_insurance": [
+      "Blue Cross Blue Shield",
+      "Aetna",
+      "Cigna",
+      "UnitedHealthcare",
+      "Medicare",
+      "Medicaid",
+      "Humana",
+      "Kaiser Permanente"
+    ],
+    "payment_methods": [
+      "Cash",
+      "Credit Card (Visa, MasterCard, American Express, Discover)",
+      "Debit Card",
+      "Check",
+      "HSA/FSA cards"
+    ],
+    "billing_policy": "Payment is due at the time of service. We will file insurance claims on your behalf. Your insurance copay or deductible is due at check-in. For patients without insurance, we offer a self-pay discount of 15% when payment is made in full at the time of service. Payment plans are available for balances over $500.",
+    "cancellation_fee": "Appointments cancelled with less than 24 hours notice may be subject to a $50 cancellation fee."
+  },
+  "visit_preparation": {
+    "first_visit_documents": [
+      "Valid photo ID (driver's license or state ID)",
+      "Insurance card (both sides)",
+      "List of current medications with dosages",
+      "Medical history form (available on our website or at check-in)",
+      "Referral form if required by your insurance"
+    ],
+    "what_to_bring": [
+      "Insurance card",
+      "Photo ID",
+      "List of current medications",
+      "Any relevant medical records or test results",
+      "List of questions or concerns for your doctor"
+    ],
+    "arrival_time": "Please arrive 15 minutes before your scheduled appointment time for check-in and paperwork. For first-time patients, please arrive 20 minutes early."
+  },
+  "policies": {
+    "cancellation_policy": "We require at least 24 hours notice for appointment cancellations or rescheduling. This allows us to offer the time slot to other patients who need care. Cancellations with less than 24 hours notice may be subject to a $50 fee. No-shows will be charged the full appointment fee.",
+    "late_arrival_policy": "If you arrive more than 15 minutes late for your appointment, we may need to reschedule you to avoid delays for other patients. Please call us if you are running late and we will do our best to accommodate you.",
+    "covid19_protocols": "For everyone's safety, we ask that you wear a mask if you have any respiratory symptoms. Hand sanitizer is available throughout the clinic. We maintain enhanced cleaning protocols and proper ventilation. If you test positive for COVID-19, please call us to discuss rescheduling or a telehealth option.",
+    "prescription_refills": "Prescription refill requests should be submitted at least 48 hours in advance. You can request refills through our patient portal, by phone, or through your pharmacy. Controlled substance prescriptions require an office visit.",
+    "test_results": "Most test results are available within 3-5 business days. We will contact you with results via phone or through our patient portal. You may also call our office to inquire about results. Some specialized tests may take longer."
+  },
+  "appointment_types": {
+    "general_consultation": {
+      "duration": 30,
+      "description": "Comprehensive medical consultation for new symptoms, chronic condition management, or general health concerns",
+      "cost_range": "$150-200 without insurance"
+    },
+    "followup": {
+      "duration": 15,
+      "description": "Brief follow-up visit to check on treatment progress or discuss test results",
+      "cost_range": "$75-100 without insurance"
+    },
+    "physical_exam": {
+      "duration": 45,
+      "description": "Complete annual physical examination including vital signs, review of systems, and preventive care screening",
+      "cost_range": "$200-250 without insurance, often fully covered by insurance"
+    },
+    "specialist_consultation": {
+      "duration": 60,
+      "description": "Extended consultation for complex conditions requiring specialized evaluation and treatment planning",
+      "cost_range": "$250-350 without insurance"
+    }
+  },
+  "common_questions": {
+    "do_you_accept_walkins": "We operate primarily by appointment to ensure minimal wait times. However, we do accept walk-ins based on availability. Call ahead to check if same-day appointments are available.",
+    "telehealth_available": "Yes, we offer telehealth appointments for follow-ups, prescription refills, and non-emergency consultations. Ask when scheduling if your visit can be conducted via telehealth.",
+    "specialist_referrals": "Our physicians can provide referrals to specialists when medically necessary. We work with a network of trusted specialists in the area.",
+    "lab_services": "We have an on-site laboratory for common blood work and testing. Results are typically available within 24-48 hours. Some specialized tests are sent to reference labs."
+  }
+}
