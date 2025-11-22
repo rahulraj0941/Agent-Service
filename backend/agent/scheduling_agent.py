@@ -17,7 +17,7 @@ class SchedulingAgent:
         if not api_key:
             raise ValueError("GOOGLE_API_KEY environment variable is not set")
         
-        model_name = os.getenv("LLM_MODEL", "gemini-1.5-flash")
+        model_name = os.getenv("LLM_MODEL", "gemini-2.5-flash")
         
         self.llm = ChatGoogleGenerativeAI(
             model=model_name,

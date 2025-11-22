@@ -37,7 +37,7 @@ An intelligent conversational agent that helps patients schedule medical appoint
             ▼                              ▼
 ┌───────────────────────┐      ┌──────────────────────┐
 │  Scheduling Agent     │      │  Availability Check   │
-│  (LangChain + GPT-4)  │◄────►│  Booking Management   │
+│  (LangChain + Gemini) │◄────►│  Booking Management   │
 │                       │      │  Conflict Prevention  │
 └───────┬───────────────┘      └──────────────────────┘
         │
@@ -68,7 +68,7 @@ An intelligent conversational agent that helps patients schedule medical appoint
 1. **Knowledge Base Initialization**: 
    - Loads clinic information from `data/clinic_info.json`
    - Splits content into semantic chunks (clinic details, insurance, policies, etc.)
-   - Generates embeddings using OpenAI's text-embedding-3-small model
+   - Generates embeddings using Google's embedding-001 model
    - Stores in ChromaDB vector database
 
 2. **Query Processing**:
@@ -85,7 +85,7 @@ An intelligent conversational agent that helps patients schedule medical appoint
 
 ### Tool Calling Strategy
 
-The agent uses LangChain's OpenAI Tools Agent with two primary tools:
+The agent uses LangChain's Google Gemini integration with tool calling for two primary tools:
 
 1. **check_availability**: 
    - Input: Date (YYYY-MM-DD) and appointment type
@@ -130,7 +130,7 @@ The system automatically calculates end times and ensures slots don't overlap.
 
 - Python 3.11+
 - Node.js 20+
-- OpenAI API Key
+- Google Gemini API Key (free tier available)
 
 ### Installation
 
@@ -151,11 +151,27 @@ cd ..
 Create a `.env` file in the root directory (use `.env.example` as template):
 
 ```env
-OPENAI_API_KEY=your_openai_api_key_here
-LLM_MODEL=gpt-4o-mini
+# LLM Configuration
+LLM_PROVIDER=google
+LLM_MODEL=gemini-2.5-flash
+GOOGLE_API_KEY=your_google_api_key_here
+
+# Vector Database
+VECTOR_DB=chromadb
+VECTOR_DB_PATH=./data/vectordb
+
+# Server Configuration
 BACKEND_PORT=8000
 FRONTEND_PORT=5000
 ```
+
+**Getting a Google Gemini API Key:**
+1. Visit [Google AI Studio](https://aistudio.google.com/apikey)
+2. Sign in with your Google account
+3. Click "Create API Key"
+4. Copy the key and add it to your `.env` file
+
+**Note:** The free tier includes 10 requests per minute and 250K tokens per minute, which is sufficient for development and testing.
 
 ### Running the Application
 
@@ -355,10 +371,10 @@ appointment-scheduling-agent/
 
 ### Backend
 - **Framework**: FastAPI 0.121.3
-- **LLM**: OpenAI GPT-4o-mini (configurable)
-- **Agent Framework**: LangChain 1.0.8
+- **LLM**: Google Gemini 2.5 Flash (free tier)
+- **Agent Framework**: LangChain 1.0.8 with langchain-google-genai
 - **Vector Database**: ChromaDB 1.3.5
-- **Embeddings**: OpenAI text-embedding-3-small
+- **Embeddings**: Google embedding-001 model
 - **Data Validation**: Pydantic 2.11.1
 
 ### Frontend
@@ -450,11 +466,19 @@ Book an appointment.
 
 ### Environment Variables
 
-- `OPENAI_API_KEY`: Your OpenAI API key (required)
-- `LLM_MODEL`: OpenAI model to use (default: gpt-4o-mini)
+- `GOOGLE_API_KEY`: Your Google Gemini API key (required)
+- `LLM_PROVIDER`: LLM provider to use (default: google)
+- `LLM_MODEL`: Gemini model to use (default: gemini-2.5-flash)
 - `BACKEND_PORT`: Backend server port (default: 8000)
 - `FRONTEND_PORT`: Frontend dev server port (default: 5000)
+- `VECTOR_DB`: Vector database type (default: chromadb)
 - `VECTOR_DB_PATH`: ChromaDB storage path (default: ./data/vectordb)
+
+**Environment Validation:**
+Run the environment validator before starting the application:
+```bash
+python backend/utils/env_validator.py
+```
 
 ### Clinic Configuration
 
@@ -468,6 +492,36 @@ Modify `data/doctor_schedule.json` to update:
 - Working hours
 - Blocked dates
 - Pre-existing appointments
+
+## Migration Notes
+
+### OpenAI to Google Gemini (November 2025)
+
+The application was migrated from OpenAI to Google Gemini API to leverage the free tier and avoid quota limitations.
+
+**Key Changes:**
+- **LLM Model**: Changed from `gpt-4o-mini` to `gemini-2.5-flash`
+- **Embeddings**: Changed from `text-embedding-3-small` to `models/embedding-001`
+- **Dependencies**: Replaced `langchain-openai` with `langchain-google-genai`
+- **Environment Variables**: 
+  - `OPENAI_API_KEY` → `GOOGLE_API_KEY`
+  - Added `LLM_PROVIDER=google`
+  - Updated `LLM_MODEL` to `gemini-2.5-flash`
+
+**Response Format Handling:**
+- Added `_extract_text_content()` helper in `SchedulingAgent` to handle Gemini's list-based response format
+- Gemini returns content as `[{'type': 'text', 'text': '...'}]` instead of plain strings
+- Helper function normalizes responses to strings for consistent serialization
+
+**Free Tier Limits:**
+- 10 requests per minute (RPM)
+- 250,000 tokens per minute (TPM)
+- 250 requests per day (RPD)
+
+**Environment Validation:**
+- Added `backend/utils/env_validator.py` to validate required Gemini environment variables
+- Warns if deprecated model names (containing "1.5") are detected
+- Run with: `python backend/utils/env_validator.py`
 
 ## Future Enhancements
 
