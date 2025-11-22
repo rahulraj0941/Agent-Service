@@ -56,10 +56,15 @@ localPort = 8000
 externalPort = 8000
 
 [[ports]]
+localPort = 33635
+externalPort = 3000
+
+[[ports]]
 localPort = 41273
 externalPort = 80
 
 [userenv]
 
 [userenv.shared]
-LLM_MODEL = "gpt-3.5-turbo"
+LLM_MODEL = "gemini-2.5-flash"
+LLM_PROVIDER = "google"

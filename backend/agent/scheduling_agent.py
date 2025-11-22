@@ -1,4 +1,4 @@
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
 from typing import List, Dict, Any
@@ -13,16 +13,16 @@ from backend.rag.faq_rag import FAQRetrieval
 
 class SchedulingAgent:
     def __init__(self):
-        api_key = os.getenv("OPENAI_API_KEY")
+        api_key = os.getenv("GOOGLE_API_KEY")
         if not api_key:
-            raise ValueError("OPENAI_API_KEY environment variable is not set")
+            raise ValueError("GOOGLE_API_KEY environment variable is not set")
         
-        model_name = os.getenv("LLM_MODEL", "gpt-4o-mini")
+        model_name = os.getenv("LLM_MODEL", "gemini-1.5-flash")
         
-        self.llm = ChatOpenAI(
+        self.llm = ChatGoogleGenerativeAI(
             model=model_name,
             temperature=0.7,
-            api_key=api_key
+            google_api_key=api_key
         ).bind_tools([availability_tool, booking_tool])
         
         self.faq_retrieval = None
@@ -45,6 +45,20 @@ class SchedulingAgent:
             elif msg["role"] == "assistant":
                 messages.append(AIMessage(content=msg["content"]))
         return messages
+    
+    def _extract_text_content(self, content: Any) -> str:
+        """Extract text from response content - handles both string and list formats."""
+        if isinstance(content, str):
+            return content
+        elif isinstance(content, list):
+            text_parts = []
+            for part in content:
+                if isinstance(part, dict) and 'text' in part:
+                    text_parts.append(part['text'])
+                elif isinstance(part, str):
+                    text_parts.append(part)
+            return ''.join(text_parts)
+        return str(content)
     
     def _check_if_faq_query(self, user_message: str) -> bool:
         faq_keywords = [
@@ -110,9 +124,9 @@ class SchedulingAgent:
                         )
                 
                 final_response = await self.llm.ainvoke(messages)
-                response = final_response.content
+                response = self._extract_text_content(final_response.content)
             else:
-                response = response_message.content
+                response = self._extract_text_content(response_message.content)
             
             updated_history = conversation_history + [
                 {"role": "user", "content": user_message},
