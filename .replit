@@ -58,3 +58,8 @@ externalPort = 8000
 [[ports]]
 localPort = 41273
 externalPort = 80
+
+[userenv]
+
+[userenv.shared]
+LLM_MODEL = "gpt-3.5-turbo"
