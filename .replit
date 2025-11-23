@@ -17,15 +17,15 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Start App"
+args = "Start Application"
 
 [[workflows.workflow]]
-name = "Start App"
+name = "Start Application"
 author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "bash start_multiport.sh"
+args = "bash start_app.sh"
 waitForPort = 5000
 
 [workflows.workflow.metadata]
@@ -36,8 +36,8 @@ localPort = 5000
 externalPort = 80
 
 [[ports]]
-localPort = 41273
-externalPort = 80
+localPort = 38403
+externalPort = 3000
 
 [[ports]]
 localPort = 43489
