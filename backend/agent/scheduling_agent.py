@@ -1,6 +1,6 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_core.messages import HumanMessage, AIMessage, ToolMessage, SystemMessage
+from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
 from typing import List, Dict, Any
 import os
 import json
@@ -95,11 +95,15 @@ class SchedulingAgent:
             
             chat_history = self._convert_history_to_messages(conversation_history)
             
-            messages: List[Any] = [
-                {"role": "system", "content": SYSTEM_PROMPT}
-            ] + chat_history + [
-                HumanMessage(content=enhanced_message)
-            ]
+            # Build message list: first add system prompt as part of first user message, then history, then current message
+            if not chat_history:
+                # First message - include system prompt
+                messages: List[Any] = [
+                    HumanMessage(content=f"{SYSTEM_PROMPT}\n\n---\n\n{enhanced_message}")
+                ]
+            else:
+                # Subsequent messages - just use history + current message
+                messages = chat_history + [HumanMessage(content=enhanced_message)]
             
             response_message = await self.llm.ainvoke(messages)
             
