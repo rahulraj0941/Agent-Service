@@ -172,11 +172,11 @@ Use this checklist to ensure your submission is complete and ready.
 pytest tests/test_agent.py -v
 
 # Verify results
-[ ] All scheduling logic tests pass (30+)
-[ ] All API integration tests pass (10+)
-[ ] All RAG system tests pass (8+)
-[ ] All agent workflow tests pass (5+)
-[ ] Total: 50+ tests passing
+[ ] All scheduling logic tests pass
+[ ] All API integration tests pass
+[ ] All RAG system tests pass
+[ ] All agent workflow tests pass
+[ ] Total: 25+ comprehensive tests passing
 ```
 
 ---
@@ -382,7 +382,7 @@ Key Features:
 Technology Stack:
 - Backend: FastAPI, LangChain, Google Gemini, ChromaDB
 - Frontend: React, Vite
-- Testing: Pytest with 50+ tests
+- Testing: Pytest with 25+ comprehensive tests
 
 The application is fully functional and ready for evaluation. Setup instructions are provided in README.md.
 
@@ -401,7 +401,7 @@ Best regards,
 Your implementation has:
 - ✅ **500+ lines** of backend code
 - ✅ **300+ lines** of frontend code
-- ✅ **50+ tests** all passing
+- ✅ **25+ comprehensive tests** all passing
 - ✅ **4 major components**: Agent, RAG, Tools, API
 - ✅ **6 edge cases** handled gracefully
 - ✅ **2000+ lines** of comprehensive documentation

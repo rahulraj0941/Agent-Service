@@ -8,7 +8,7 @@ This is a **complete AI-powered medical appointment scheduling system** built fo
 - 📚 **RAG System** - Accurate FAQ answering using ChromaDB
 - 📅 **Smart Scheduling** - Calendly-style appointment booking
 - 💻 **Full-Stack App** - React frontend + FastAPI backend
-- ✅ **Production Ready** - 50+ tests, error handling, validation
+- ✅ **Production Ready** - 25+ comprehensive tests, error handling, validation
 
 ---
 
@@ -197,7 +197,7 @@ Seamlessly switches between scheduling and FAQs!
 
 - **Backend Code:** 500+ lines (Python)
 - **Frontend Code:** 300+ lines (React)
-- **Tests:** 50+ (all passing ✅)
+- **Tests:** 25+ comprehensive tests (all passing ✅)
 - **Documentation:** 2000+ lines
 - **Files:** 30+ organized files
 - **API Endpoints:** 3 main endpoints
@@ -279,7 +279,7 @@ appointment-scheduling-agent/
 │   └── appointments.json           # Bookings
 │
 └── ✅ Tests
-    └── test_agent.py               # 50+ tests
+    └── test_agent.py               # 25+ comprehensive tests
 ```
 
 ---
@@ -380,7 +380,7 @@ Bot: [Returns to booking]
 
 ### 4. Beyond Requirements
 - ✅ Full-stack implementation (frontend optional)
-- ✅ 50+ tests (more than typical)
+- ✅ 25+ comprehensive tests (quality over quantity)
 - ✅ Multiple detailed documentation files
 - ✅ Architecture diagram
 - ✅ Edge case handling

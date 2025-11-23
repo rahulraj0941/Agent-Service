@@ -691,7 +691,7 @@ class SchedulingAgent:
         """Initialize the intelligent agent"""
         # Load configuration
         self.llm_provider = os.getenv("LLM_PROVIDER", "google")
-        self.llm_model = os.getenv("LLM_MODEL", "gemini-1.5-flash")
+        self.llm_model = os.getenv("LLM_MODEL", "gemini-2.5-flash")
         
         # Initialize LLM
         self.llm = self._initialize_llm()

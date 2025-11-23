@@ -465,7 +465,7 @@ class SchedulingAgent:
     def __init__(self):
         # Initialize LLM
         self.llm = ChatGoogleGenerativeAI(
-            model="gemini-1.5-flash",
+            model="gemini-2.5-flash",
             temperature=0.7  # Balance creativity and consistency
         )
         
@@ -1024,31 +1024,32 @@ pytest tests/test_agent.py --cov=backend --cov-report=html
 
 ### Test Coverage
 
-The tests cover:
+The test suite (25+ comprehensive tests) covers:
 
-1. **Scheduling Logic** (30+ tests)
-   - Time conversion
-   - Conflict detection
-   - Slot availability
+1. **Scheduling Logic**
+   - Time conversion utilities
+   - Conflict detection algorithms
+   - Slot availability calculations
    - Appointment duration handling
+   - Working hours validation
 
-2. **API Integration** (10+ tests)
-   - Availability endpoint
-   - Booking endpoint
-   - Input validation
-   - Error handling
+2. **API Integration**
+   - Availability endpoint functionality
+   - Booking endpoint validation
+   - Input data validation
+   - Error handling and edge cases
 
-3. **RAG System** (8+ tests)
-   - Document indexing
-   - Query retrieval
-   - Context relevance
-   - Edge cases
+3. **RAG System**
+   - Document indexing and storage
+   - Semantic query retrieval
+   - Context relevance scoring
+   - FAQ matching accuracy
 
-4. **Agent Workflows** (5+ tests)
-   - Conversation flow
-   - Context switching
-   - Tool selection
-   - Error recovery
+4. **Agent Workflows**
+   - Conversation flow management
+   - Context switching between tasks
+   - Tool selection and execution
+   - Error recovery mechanisms
 
 ### Manual Testing Scenarios
 

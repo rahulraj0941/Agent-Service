@@ -53,7 +53,7 @@ pip install -r requirements.txt
 # Create .env file
 echo "GOOGLE_API_KEY=your_api_key_here" > .env
 echo "LLM_PROVIDER=google" >> .env
-echo "LLM_MODEL=gemini-1.5-flash" >> .env
+echo "LLM_MODEL=gemini-2.5-flash" >> .env
 ```
 
 Replace `your_api_key_here` with your actual Google API key.
@@ -352,7 +352,7 @@ You should see the chat interface.
 pytest tests/test_agent.py -v
 
 # Should show all tests passing
-# ✓ 50+ tests passed
+# ✓ 25+ comprehensive tests passed
 ```
 
 ---
@@ -395,7 +395,7 @@ Required variables in `.env`:
 # LLM Configuration
 GOOGLE_API_KEY=your_google_api_key_here
 LLM_PROVIDER=google
-LLM_MODEL=gemini-1.5-flash
+LLM_MODEL=gemini-2.5-flash
 
 # Optional - with defaults
 VECTOR_DB=chromadb
