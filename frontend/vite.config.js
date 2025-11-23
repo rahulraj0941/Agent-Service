@@ -8,8 +8,9 @@ export default defineConfig({
     port: 5000,
     strictPort: true,
     hmr: {
-      clientPort: 5000,
-      host: 'localhost'
+      protocol: 'wss',
+      host: process.env.REPLIT_DEV_DOMAIN || 'localhost',
+      clientPort: 443
     },
     cors: true,
     proxy: {
