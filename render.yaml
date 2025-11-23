@@ -16,4 +16,4 @@ services:
       - key: LLM_PROVIDER
         value: google
       - key: GOOGLE_API_KEY
-        value: "AIzaSyC3_KJtFK5j1hXVlONYJMYlGHMZcn334VA"
+        sync: false
