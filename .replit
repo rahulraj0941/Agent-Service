@@ -25,7 +25,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "bash start.sh"
+args = "bash start_multiport.sh"
 waitForPort = 5000
 
 [workflows.workflow.metadata]
@@ -34,14 +34,6 @@ outputType = "webview"
 [[ports]]
 localPort = 5000
 externalPort = 80
-
-[[ports]]
-localPort = 37351
-externalPort = 4200
-
-[[ports]]
-localPort = 40103
-externalPort = 3000
 
 [[ports]]
 localPort = 41273
@@ -54,6 +46,10 @@ externalPort = 3001
 [[ports]]
 localPort = 44133
 externalPort = 3003
+
+[[ports]]
+localPort = 45533
+externalPort = 3000
 
 [[ports]]
 localPort = 46483
