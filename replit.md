@@ -5,6 +5,14 @@
 An intelligent conversational agent that helps patients schedule medical appointments through natural language interaction. The system combines appointment booking capabilities with a RAG-based FAQ system to answer clinic-related questions. Built with FastAPI backend, React frontend, and powered by Google Gemini API with LangChain for agent orchestration.
 
 **Latest Updates (Nov 23, 2025):**
+- **RENDER DEPLOYMENT CONFIGURATION ADDED**:
+  - Created `render.yaml` for automated Render deployment (Blueprint method)
+  - Created `build.sh` script for building frontend and installing dependencies
+  - Added comprehensive deployment documentation (RENDER_DEPLOYMENT.md)
+  - Added deployment checklist (DEPLOYMENT_CHECKLIST.md)
+  - Configured NODE_VERSION to ensure Node.js availability during build
+  - Ready for deployment on Render.com (https://dashboard.render.com/)
+  
 - **PROJECT CLEANUP COMPLETED**:
   - Removed all assessment documentation files
   - Removed temporary files and cache directories
@@ -137,6 +145,28 @@ Required environment variables:
 - `BACKEND_PORT`: Optional, defaults to 8000
 
 Environment validation utility available at `backend/utils/env_validator.py` to check required variables before startup.
+
+### Deployment Options
+
+#### Render.com Deployment
+The application is configured for deployment on Render.com:
+- **Configuration**: `render.yaml` (Blueprint/Infrastructure as Code)
+- **Build Script**: `build.sh` (builds frontend, installs dependencies)
+- **Required Environment Variables**:
+  - `PYTHON_VERSION`: 3.11.0
+  - `NODE_VERSION`: 20.11.0 (required for frontend build)
+  - `GOOGLE_API_KEY`: Your Google Gemini API key (CRITICAL)
+  - `LLM_MODEL`: gemini-2.5-flash
+  - `LLM_PROVIDER`: google
+- **Deployment Method**: Blueprint (automated) or Manual Web Service
+- **Documentation**: See `RENDER_DEPLOYMENT.md` and `DEPLOYMENT_CHECKLIST.md`
+
+#### Replit Deployment
+The application is also configured for Replit Web Services:
+- **Deployment Type**: Autoscale
+- **Configuration**: `.replit` file
+- **Build Command**: `npm run build --prefix frontend`
+- **Run Command**: `python -m uvicorn backend.main:app --host 0.0.0.0 --port 5000`
 
 ### CORS Configuration
 Backend configured to accept requests from all origins for development purposes.
