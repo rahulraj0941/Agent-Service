@@ -1,0 +1,212 @@
+Request to Complete Assessment.
+Inbox
+Siddhi Khedekar
+  
+AttachmentsFri, Nov 21, 5:33 PM (2 days ago)
+  
+  
+to me
+
+Hi Rahul,
+
+ 
+
+Thank you for your interest in the position and for participating in our interview process.
+
+As the next step, we request you to complete the assigned assessment within the next 24 hours. This will help us evaluate your skills and proceed further in the selection process.
+
+Please find the assessment attached. Once completed, kindly reply to this email with your submission or share the required files as instructed.
+
+If you have any questions or face any issues accessing the assessment, feel free to reach out.
+
+Looking forward to receiving your completed assessment.
+
+ 
+
+ 
+
+Thanks & Regards,
+
+Siddhi Khedekar
+
+Senior Recruiter
+
+Weavings Manpower Solutions Pvt. Ltd.
+
+(a ‘PLANET’ group venture)
+
+Mumbai – 400053, Maharashtra, INDIA
+
+Mob: +91-7506056187
+
+Email: siddhi.khedekar@weavings.in
+
+ 
+
+From: Rahul Raj <rahulraj476747@gmail.com>
+Sent: 21 November 2025 15:53
+To: Siddhi Khedekar <siddhi.khedekar@weavings.in>
+Subject: Re: Job Description
+
+ 
+
+Acknowledged. 
+I am interested in this position. 
+
+ 
+
+On Fri, Nov 21, 2025 at 2:30 PM Siddhi Khedekar <recruit@weavings.in> wrote:
+
+    Hello Rahul, 
+
+     
+
+    Greetings from Weavings Manpower!
+
+     
+
+    Indeed it was pleasure to speak this afternoon to discuss the role of Senior Backend Developer-Scalable Applications & Systems with our esteemed client.
+
+     
+
+     
+
+    Kindly find the Job Description below,
+
+    Senior Backend Developer - Scalable Applications & Systems
+
+     
+
+    Location: Remote
+
+    Experience: 3-5 years
+
+     
+
+    What You'll Do
+
+     
+
+           Own development of scalable backend systems for production-grade applications
+
+     
+
+           Design and implement RESTful APIs, microservices, and data models
+
+     
+
+           Own payment gateway integrations (e.g., Razorpay, Stripe, etc.) and ensure secure,
+
+          seamless transactions
+
+     
+
+           Architect and deploy backend solutions across cloud platforms (AWS, GCP, etc.)
+
+     
+
+           Build and maintain resilient infrastructure to support high-traffic applications
+
+     
+
+           Collaborate with frontend, DevOps, and product teams to ship end-to-end features
+
+     
+
+           Optimize systems for performance, reliability, and scalability
+
+     
+
+           Drive code quality, system security, and architectural best practices
+
+     
+
+     
+
+    What We're Looking For
+
+     
+
+           3-5 years of experience in backend development with end-to-end ownership of feature
+
+    delivery
+
+     
+
+           Proficiency in Python (or similar backend languages like Node.js, Java, or Go)
+
+     
+
+           Strong knowledge of relational and non-relational databases
+
+        Proven experience with payment gateway integration and order processing systems
+
+     
+
+        Experience designing scalable systems and working with event-driven or distributed
+
+    architectures
+
+     
+
+        Familiarity with Docker, Kubernetes, CI/CD pipelines, and monitoring tools
+
+     
+
+        Ability to translate business needs into robust technical solutions
+
+     
+
+        Excellent debugging, communication, and collaboration skills
+
+     
+
+     
+
+    Nice to Have
+
+     
+
+           Experience working in startups or fast-paced product teams
+
+     
+
+           Exposure to AI/ML-based systems or microservice architectures
+
+     
+
+           Prior experience in fintech or e-commerce platforms
+
+     
+
+           Contributions to open-source backend projects
+
+     
+
+     
+
+    Why Join Us
+
+     
+
+           Work on impactful projects with real users and scale
+
+     
+
+           Join a fast-moving, no-nonsense product team that loves shipping
+
+     
+
+           Flexible hybrid working model with high ownership and zero micromanagement
+
+     
+
+           Be part of a company that's building for the future
+
+     
+
+    Kindly share your acknowledgment and updated resume to proceed with the next steps in the process. 
+
+     
+
+    Regards,
