@@ -11,7 +11,7 @@ class EmbeddingService:
         
         self.embeddings = GoogleGenerativeAIEmbeddings(
             model="models/embedding-001",
-            google_api_key=api_key
+            google_api_key=api_key  # type: ignore
         )
     
     def embed_text(self, text: str) -> List[float]:

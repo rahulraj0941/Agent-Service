@@ -26,8 +26,8 @@ class VectorStore:
         
         self.collection.add(
             documents=texts,
-            metadatas=metadatas,
-            embeddings=embeddings,
+            metadatas=metadatas,  # type: ignore
+            embeddings=embeddings,  # type: ignore
             ids=ids
         )
     
