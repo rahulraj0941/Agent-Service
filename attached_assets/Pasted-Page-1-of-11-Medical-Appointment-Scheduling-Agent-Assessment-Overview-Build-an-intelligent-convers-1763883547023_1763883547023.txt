@@ -1,0 +1,326 @@
+Page 1 of 11
+Medical Appointment Scheduling Agent -
+Assessment
+Overview
+Build an intelligent conversational agent that helps patients schedule medical appointments through
+Calendly integration. The agent should understand available time slots, ask relevant questions, answer
+FAQs using RAG, and handle scheduling intelligently.
+Problem Statement
+Create a conversational scheduling system that:
+. Integrates with Calendly API to fetch available and booked time slots
+. Engages in natural conversation to understand patient needs
+. Intelligently suggests available time slots based on preferences
+. Answers frequently asked questions using RAG
+. Books appointments through Calendly API
+. Handles rescheduling and cancellation requests
+. Seamlessly switches between scheduling and FAQ answering
+Technical Requirements
+Tech Stack
+Backend: FastAPI (Python 3.10+)
+LLM: Any (OpenAI, Anthropic, Llama, Mistral, etc.) - Document your choice
+Vector Database: Your choice (Pinecone, ChromaDB, Weaviate, Qdrant, etc.)
+Calendar API: Calendly API (or mock implementation)
+Frontend (if fullstack): React with chat interface
+Core Features
+1. Calendly Integration
+Page 2 of 11
+Fetch doctor's schedule (working hours, existing appointments)
+Get available time slots dynamically
+Create new appointments
+Handle different appointment types with durations:
+General Consultation: 30 minutes
+Follow-up: 15 minutes
+Physical Exam: 45 minutes
+Specialist Consultation: 60 minutes
+2. Intelligent Conversation Flow
+Phase 1: Understanding Needs
+Greet patient warmly
+Understand reason for visit
+Determine appointment type
+Ask about preferred date/time
+Phase 2: Slot Recommendation
+Show 3-5 available slots based on preferences
+Explain why slots are suggested
+Handle "none of these work" gracefully
+Offer alternative dates/times
+Phase 3: Booking Conrmation
+Collect necessary information:
+Patient name
+Phone number
+Email
+Reason for visit
+Conrm all details before booking
+Create appointment via Calendly
+Provide conrmation details
+3. FAQ Knowledge Base (RAG)
+Create RAG system for clinic information:
+Clinic Details:
+Location and directions
+Parking information
+Hours of operation
+Page 3 of 11
+Insurance & Billing:
+Accepted insurance providers
+Payment methods
+Billing policies
+Visit Preparation:
+Required documents
+First visit procedures
+What to bring
+Policies:
+Cancellation policy
+Late arrival policy
+COVID-19 protocols
+Seamless Context Switching:
+User asks FAQ in middle of booking → Answer, then return to booking
+User wants to schedule after FAQ → Smoothly transition to scheduling
+User asks multiple FAQs → Answer all, maintain context
+4. Smart Scheduling Logic
+Time Preferences: Morning person? Evening availability?
+Date Flexibility: ASAP vs specic date
+Appointment Duration: Match appointment type with time slot
+Buffer Time: Account for travel, preparation
+Conict Handling: No double-booking
+Timezone Awareness: Handle if applicable
+5. Edge Cases & Error Handling
+No Available Slots:
+Clearly explain situation
+Offer waitlist or alternative dates
+Suggest calling oce
+User Changes Mind:
+Handle gracefully mid-booking
+Allow restart without confusion
+Page 4 of 11
+Ambiguous Time References:
+"Tomorrow morning" → Clarify specic time
+"Next week" → Conrm which day
+"Around 3" → Conrm AM/PM
+Invalid Input:
+Non-existent dates
+Past dates
+Outside business hours
+API Failures:
+Calendly unavailable
+Network timeout
+Graceful degradation
+Calendly API Integration
+Option 1: Real Calendly API
+If using real Calendly:
+Sign up for free Calendly account
+Create API token
+Set up event types
+Use these endpoints:
+GET /event_types - Get appointment types
+GET /event_types/{uuid}/available_times - Get availability
+POST /scheduled_events - Create booking
+Option 2: Mock Calendly API
+If mocking, implement these endpoints:
+# Mock Calendly Endpoints to Implement
+GET /api/calendly/availability
+Query params:
+- date: "2024-01-15"
+- appointment_type: "consultation" | "followup" | "physical" | "special
+Page 5 of 11
+Agent Capabilities Required
+Conversation Example 1: Successful Booking
+User: I need to see the doctor
+Agent: I'd be happy to help you schedule an appointment! What's the main
+reason for your visit today?
+Response:
+{
+"date": "2024-01-15",
+"available_slots": [
+{"start_time": "09:00", "end_time": "09:30", "available": true},
+{"start_time": "09:30", "end_time": "10:00", "available": false},
+{"start_time": "10:00", "end_time": "10:30", "available": true},
+...
+]
+}
+POST /api/calendly/book
+Body:
+{
+"appointment_type": "consultation",
+"date": "2024-01-15",
+"start_time": "10:00",
+"patient": {
+"name": "John Doe",
+"email": "john@example.com",
+"phone": "+1-555-0100"
+},
+"reason": "Annual checkup"
+}
+Response:
+{
+"booking_id": "APPT-2024-001",
+"status": "confirmed",
+"confirmation_code": "ABC123",
+"details": {...}
+}
+Page 6 of 11
+User: I've been having headaches
+Agent: I understand. For persistent headaches, I'd recommend a general
+consultation (30 minutes) where the doctor can assess your symptoms. Does
+that sound appropriate, or would you prefer a longer specialist
+consultation?
+User: General consultation is fine
+Agent: Perfect. When would you like to come in? Do you have a preference
+for morning or afternoon appointments?
+User: Afternoon if possible, sometime this week
+Agent: Let me check our afternoon availability this week. I have these
+options:
+- Tomorrow (Jan 16) at 2:00 PM
+- Wednesday (Jan 17) at 3:30 PM
+- Thursday (Jan 18) at 1:00 PM
+- Friday (Jan 19) at 2:30 PM
+Which works best for you?
+User: Wednesday at 3:30
+Agent: Excellent! Wednesday, January 17th at 3:30 PM for a 30-minute
+consultation. Before I confirm, I'll need a few details:
+- Your full name?
+- Best phone number to reach you?
+- Email address for confirmation?
+[Collects information, confirms booking]
+Agent: All set! Your appointment is confirmed for Wednesday, January 17th
+at 3:30 PM. You'll receive a confirmation email at john@example.com with
+all the details. The confirmation code is ABC123.
+Is there anything else you'd like to know about your visit?
+Conversation Example 2: FAQ During Booking
+Page 7 of 11
+User: I want to book an appointment
+Agent: I'd be happy to help! What brings you in today?
+User: Actually, first - what insurance do you accept?
+Agent: Great question! We accept most major insurance providers including
+Blue Cross Blue Shield, Aetna, Cigna, UnitedHealthcare, and Medicare. We
+also accept self-pay patients. Do you have insurance with one of these
+providers?
+User: Yes, I have Blue Cross. Okay, I'd like to schedule a checkup
+Agent: Perfect, we accept Blue Cross Blue Shield. Now for your checkup -
+would this be your first visit with us, or are you an existing patient?
+[Continues with scheduling...]
+Conversation Example 3: No Available Slots
+User: Can I see the doctor today?
+Agent: I understand you'd like to be seen today. Unfortunately, we don't
+have any available appointments for today. However, I have several options
+for tomorrow:
+- 9:00 AM
+- 11:30 AM
+- 2:00 PM
+Would any of these work? If you need urgent care, I can also provide
+information about our walk-in clinic hours.
+User: Is there a waitlist for today?
+Agent: We don't have a formal waitlist, but I'd recommend calling our
+office at (555) 123-4567 as they sometimes have last-minute cancellations.
+For planned appointments, would you like me to book you for tomorrow?
+Submission Requirements
+Page 8 of 11
+Required Files & Structure
+appointment-scheduling-agent/
+├── README.md
+├── .env.example
+├── requirements.txt
+├── architecture_diagram.png/pdf
+├── backend/
+│ ├── main.py
+│ ├── agent/
+│ │ ├── scheduling_agent.py
+│ │ └── prompts.py
+│ ├── rag/
+│ │ ├── faq_rag.py
+│ │ ├── embeddings.py
+│ │ └── vector_store.py
+│ ├── api/
+│ │ ├── chat.py
+│ │ └── calendly_integration.py
+│ ├── tools/
+│ │ ├── availability_tool.py
+│ │ └── booking_tool.py
+│ └── models/
+│ └── schemas.py
+├── frontend/ # If fullstack
+│ ├── package.json
+│ └── src/
+│ ├── App.jsx
+│ └── components/
+│ ├── ChatInterface.jsx
+│ └── AppointmentConfirmation.jsx
+├── data/
+│ ├── clinic_info.json # Provided FAQ data
+│ └── doctor_schedule.json # Provided schedule data
+└── tests/
+└── test_agent.py
+README.md Must Include
+. Setup Instructions
+Page 9 of 11
+Calendly API setup (if using real API)
+Environment variables
+Running the application
+. System Design
+Agent conversation ow
+Calendly integration approach
+RAG pipeline for FAQs
+Tool calling strategy
+. Scheduling Logic
+How available slots are determined
+Appointment type handling
+Conict prevention
+. Testing
+Example conversations
+Edge cases covered
+.env.example
+# LLM Configuration
+LLM_PROVIDER=openai
+LLM_MODEL=gpt-4-turbo
+OPENAI_API_KEY=your_key_here
+# Calendly (if using real API)
+CALENDLY_API_KEY=your_calendly_key
+CALENDLY_USER_URL=https://calendly.com/your-username
+# Vector Database
+VECTOR_DB=chromadb
+VECTOR_DB_PATH=./data/vectordb
+# Clinic Configuration
+CLINIC_NAME=HealthCare Plus Clinic
+CLINIC_PHONE=+1-555-123-4567
+TIMEZONE=America/New_York
+# Application
+Page 10 of 11
+BACKEND_PORT=8000
+FRONTEND_PORT=3000
+Architecture Diagram Must Include
+Conversation agent ow
+Calendly API integration
+RAG pipeline for FAQs
+Tool calling (availability check, booking)
+Context switching mechanism (scheduling ↔ FAQ)
+Error handling paths
+Evaluation Focus Areas
+. Conversational Quality (Highest Priority - 30%)
+Natural, empathetic conversation
+Appropriate questions at right time
+Smooth transitions between topics
+Context awareness
+. RAG Quality (30%)
+Accurate FAQ retrieval
+Relevant answers
+No hallucinated information
+Seamless context switching
+. Scheduling Intelligence (25%)
+Understands preferences
+Smart slot recommendations
+Handles appointment types correctly
+Validates bookings
+. Edge Case Handling (15%)
+No slots available
+API failures
+Ambiguous inputs
+User changes mind
+Page 11 of 11
+Time Limit
+3 days from receipt of assessment
+Submission Method
+GitHub repository with all required les
+Notes
+Focus on natural conversation ow
+Don't be rigid or robotic
+Handle context switches gracefully
+Be empathetic (healthcare context)
+Clear conrmations before booking
